@@ -3,6 +3,7 @@ package middleware
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"strconv"
 	"strings"
@@ -147,7 +148,7 @@ func LoggerWithConfig(config LoggerConfig) echo.MiddlewareFunc {
 				case "uri":
 					return buf.WriteString(req.RequestURI)
 				case "method":
-					return buf.WriteString(req.Method)
+					return buf.WriteString(fmt.Sprintf("%-10s", req.Method))
 				case "path":
 					p := req.URL.Path
 					if p == "" {
@@ -183,7 +184,7 @@ func LoggerWithConfig(config LoggerConfig) echo.MiddlewareFunc {
 					l := stop.Sub(start)
 					return buf.WriteString(strconv.FormatInt(int64(l), 10))
 				case "latency_human":
-					return buf.WriteString(stop.Sub(start).String())
+					return buf.WriteString(fmt.Sprintf("%20s", stop.Sub(start).String()))
 				case "bytes_in":
 					cl := req.Header.Get(echo.HeaderContentLength)
 					if cl == "" {
